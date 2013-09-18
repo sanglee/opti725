@@ -1,0 +1,70 @@
+Optimization
+Scribe session
+2013-09-03
+
+Last time:
+(1) derived linear programs
+(2) gave two forms for linear programs (inequality form and canonical/standard form)
+(3) discussed simplex algorithm (for solving linear programs)
+(4) then motivated this topic with "how to do classification with linear progams"
+	- ie. we set up an optimization problem (that allows us to do classification) that was a linear program.
+	- in order to do this we proved a Lemma that [two sets of pts are linearly separable] iff [something else]
+	- then we proved another thing before showing it was a linear program?
+(5) then we discussed how to convert LPs from inequality form to standard form
+    - not sure if we finished this proof last time
+
+This time:
+(1) linear program in standard form: min z, s.t. (systems of equations, and inequalities in terms of x_1 through x_5)
+    - defined pivot (a given term in one of the eqns, such as 3x_4)
+    - showed how to eliminate some of the variables (also known as Gaussian elimination)
+        - first you divide one eqn by x_4's coefficient (in order to make x_4 the same in two equations)
+        - then subtracted on eqn from the two other so that x_4 drops out in the others
+            - note: this is an equivalent system (with the same solution set)
+        - then he made x_2 drop out from the first and second equations
+        - this new eqn is in canonical form wrt -Z, x_4, and x_2  <-- these are dependent/basic variables
+            - x_1, x_3, and x_5 are independent/nonbasic variables
+            - if you set nonbasics to zero, you can solve for basic variables
+    - we could have chosen a different value for the pivots and gotten a different solution
+(2) formal def of canonical form:
+    - a system of m eqns and n variables x_j, j=1,..,n
+        - is in canonical form wrt (x_j1, x_j2, ..., x_jm)   <--- i believe these are the dependent/basic variables
+        - iff:
+        - x_ji has coeff=1 in  1 eqn, and coef=0 everywhere else
+    - ( assume for now the system has "full rank", i.e. if you ahve m eqns, you need m of these dependent/basic variables)
+(3) def of canonical form with matrix notation:
+    - can be written: I_M X_B + A X_N = b
+    - basic sol'n: set X_N = 0
+    - e.g.: --- learn this from someone
+=== Warming up for the simplex algorithm===
+(4)  assuming we start with canonical form with feasible basic (basic feasible) sol'n
+    - [He writes down example here, get from someone]
+    - and remember: feasible only if (b?) is non-negative
+(5) improving a nonoptimal basic solution
+    - we can increase a nonbasic variable with negative coef in a way s.t. z will decrease
+    - how much can we do it? --> he gives answer
+(6) steps of the simplex algorithm
+    1. find the col that minimizes ____
+    2. test for optimality
+    3. if coef is negative then that is index of "incoming variables"
+    4. test whether Z is unbounded (perhaps z is negative infty)
+    5. if there exist "positive components", you calculate some ratio, and change pivots?
+        - and we proved that if we choose something in this way, the new b will be non-negative, which we want.
+    6. pivot on A_rs
+        - this gives a new basic feasible solution
+        - this pivot happens regardless of whether Z changes or not
+    Note: if there is zero change in objective Z, then cycling can happen
+        - bland's rule helps to avoid cycling:
+            (a) choose pivot column (input something?) with c_j < 0
+            (b) do something else with output something
+(7) theorem: a basic feasible soln is optimal if all relative cost factors C_j, j=1,...,n are non-negative
+    - then we proved this
+(8) theorem: assuming non-degeneracy at each iteration (ie b_j>0, j=1,...,m)
+    ==> the simplex algo will converge in finite steps
+(9) remark: if we use infinite precision arithmetic, then we can find the exact solution, no approximation
+    --> not the case with interior point methods
+(10) summary of whole simplex algo:
+    - want to solve LP in standard form
+    1. find an initial/starting basic feasible solution in canonical form
+        - can aalso detect "redundancies"(?) here
+        - or, we determine here that solution doesn't exist (if there are inconsistencies)
+    2. if starting basic soln found, then find an optimal solution or show that (Z --> -infty) is possible

@@ -1,0 +1,83 @@
+\input{header}
+
+\section{Problem One}
+
+\subsection{A1}
+For $k=2$, from the definition of convexity, we know $x_1,x_2 \in C \implies
+\theta_1 x_1 + \theta_2 x_2 \in C$,  for all $\theta_1,\theta_2>0$,
+$\theta_1+\theta_2 = 1$.
+
+We will prove this for all $k$ via induction. Suppose, for a given $k$, 
+\begin{equation}
+    \sum_{i=1}^k \theta_i x_i  \in C
+\end{equation}
+Then, for $k+1$, 
+\begin{align}
+    \sum_{i=1}^{k+1} \theta_i x_i  &= \left( \sum_{i=1}^k \theta_i x_i
+  \right) + \theta_{k+1}x_{k+1} \\ &= (1-\theta_{k+1}) \left( \sum_{i=1}^k
+    \frac{\theta_i}{(1-\theta_{k+1})} x_i \right) + \theta_{k+1}x_{k+1}
+\end{align}
+Define $\tilde{x} := \sum_{i=1}^k \frac{\theta_i}{(1-\theta_{k+1})} x_i$ And
+note that
+\begin{align}
+    \sum_{i=1}^k \frac{\theta_i}{(1-\theta_{k+1})} = \frac{\sum_{i=1}^k
+    \theta_i}{(1-\theta_{k+1})} = \frac{\sum_{i=1}^k \theta_i}{\sum_{i=1}^k
+    \theta_i} = 1
+\end{align}
+So therefore, $\tilde{x}$ satisfies the induction hypothesis (using coefficients
+$\frac{\theta_i}{(1-\theta_{k+1})}$, $i=1,\ldots,k$) and hence $\tilde{x} \in C$. Therefore,
+\begin{align}
+    \sum_{i=1}^{k+1} \theta_i x_i &= (1-\theta_{k+1}) \left( \sum_{i=1}^k
+    \frac{\theta_i}{(1-\theta_{k+1})} x_i \right) + \theta_{k+1}x_{k+1} \\ &=
+    (1-\theta_{k+1}) \tilde{x} + \theta_{k+1}x_{k+1} \in C
+\end{align}
+Note that the last term is in $C$ from the definition of convexity, since $\tilde{x}$ and
+$x_{k+1}$ $\in C$, and $(1-\theta_{k+1}) + \theta_{k+1} = 1$.  Hence
+$\sum_{i=1}^{k+1} \theta_i x_i \in C$, and the result holds for all $k \geq 1$.
+
+
+\subsection{A2}
+First, we'll show $conv_2(M) \subset conv_1(M)$:\\ We will suppose not and find
+a contradiction. If we suppose not, then there exists a convex set containing
+$M$ that does not completely contain the convex hull of $M$ (i.e. there exist
+some convex combinations of points in $M$ that are not some other convex set
+containing $M$). But this contradicts what we showed in part \textbf{A1},
+namely that for a set of points in a convex set $C$, any convex combination of
+these points will also be in $C$. Hence, it must be that $conv_2(M) \subset
+conv_1(M)$.
+
+Next, we'll show $conv_1(M) \subset conv_2(M)$:\\ Again, we will suppose not
+and find a contradiction. If we suppose not, then there exists some element $x$
+that is in all convex sets containing $M$, and yet is not in the convex hull of
+$M$ (i.e. $x$ does not equal some convex combination of the points in $M$). But
+the convex hull of $M$ is convex and contains $M$.  Since this convex set does
+not contain $x$, we have a contradiction. Therefore, $conv_1(M) \subset
+conv_2(M)$.
+
+
+\subsection{B1}
+For any two points $x_1$ and $x_2$ $\in HP(a,b)$, consider $x_3 = \theta x_1 +
+(1-\theta) x_2$ (where $\theta \in [0,1]$). Then
+\begin{align}
+    a^{\top} x_3 = a^{\top} (\theta x_1 + (1-\theta) x_2) = \theta a^{\top} x_1
+    + (1-\theta) a^{\top} x_2 = \theta b + (1-\theta) b = b
+\end{align}
+Hence $x_3 \in HP(a,b)$, and $HP(a,b)$ is a convex set.
+
+the distance between parallel hyperplanes $HP(a,b_1)$ and $HP(a,b_2)$ is 
+
+
+\subsection{B2}
+
+
+\subsection{B3}
+
+
+\subsection{C}
+
+
+\subsection{D}
+
+
+
+\end{document}
