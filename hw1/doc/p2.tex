@@ -1,0 +1,33 @@
+\input{header}
+
+\section{Problem Two}
+
+
+\subsection{A}
+
+\subsubsection{(a)}
+Define $\beta^+$ by $\beta_i^+ = \begin{cases} 0 & \beta_i < 0 \\ \beta_i &
+\beta_i \geq 0 \end{cases}$, and define $\beta^-$ by $\beta_i^- = \begin{cases} 0 &
+\beta_i \geq 0 \\ \beta_i & \beta_i < 0 \end{cases}$.\\
+Then $\beta^+ - \beta^- = \beta$, and $\beta^+ + \beta^- = \| \beta \|$. Hence,
+for all solutions $\beta$ in (1), there exists a solution $(\beta^+, \beta^-)$
+    in (2) that achieves the same objective value, so the minimum objective
+    value for (2) must be less than or equal to the minimum objective value for
+    (1).
+
+\subsubsection{(b)}
+Given a solution $(\beta^+, \beta^-)$ in (2), let $\beta = \beta^+ - \beta^-$. Note then that $\|\beta^+ - \beta^-\|_1$ $\leq$ $\beta^+ + \beta^-$ (since both $\beta^+, \beta^- \geq 0$). Hence, the optimal criterion value in (1) is, in fact, is always less than or equal to that of (2). This, along with the result from part (a), implies that the optimal criterion values are always equal.
+
+\subsubsection{(c)}
+
+
+\subsection{B}
+
+\subsubsection{(a)}
+
+\subsubsection{(b)}
+
+\subsubsection{(c)}
+
+
+\end{document}

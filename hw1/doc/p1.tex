@@ -1,4 +1,14 @@
-\input{header}
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb,amsmath}
+\usepackage[parfill]{parskip}
+\title{Optimization 10/36-725\\
+        Homework 1}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+
 
 \section{Problem One}
 
@@ -52,7 +62,9 @@ that is in all convex sets containing $M$, and yet is not in the convex hull of
 $M$ (i.e. $x$ does not equal some convex combination of the points in $M$). But
 the convex hull of $M$ is convex and contains $M$.  Since this convex set does
 not contain $x$, we have a contradiction. Therefore, $conv_1(M) \subset
-conv_2(M)$.
+conv_2(M)$.\\
+If $x \in conv_1(M)$, then it is in all convex sets containing $M$, including
+$conv_2(M)$ (which we know is convex).
 
 
 \subsection{B1}
