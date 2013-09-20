@@ -2,7 +2,6 @@
 
 \section{Problem Two}
 
-
 \subsection{A}
 
 \subsubsection{(a)}
@@ -16,18 +15,133 @@ for all solutions $\beta$ in (1), there exists a solution $(\beta^+, \beta^-)$
     (1).
 
 \subsubsection{(b)}
-Given a solution $(\beta^+, \beta^-)$ in (2), let $\beta = \beta^+ - \beta^-$. Note then that $\|\beta^+ - \beta^-\|_1$ $\leq$ $\beta^+ + \beta^-$ (since both $\beta^+, \beta^- \geq 0$). Hence, the optimal criterion value in (1) is, in fact, is always less than or equal to that of (2). This, along with the result from part (a), implies that the optimal criterion values are always equal.
+Given a solution $(\beta^+, \beta^-)$ in (2), let $\beta = \beta^+ - \beta^-$.
+Note then that $\|\beta^+ - \beta^-\|_1$ $\leq$ $\beta^+ + \beta^-$ (since both
+$\beta^+, \beta^- \geq 0$). Hence, the optimal criterion value in (1) is, in
+fact, is always less than or equal to that of (2). This, along with the result
+from part (a), implies that the optimal criterion values are always equal.
 
 \subsubsection{(c)}
+Assume that $t_i \leq \max_{j=1,\ldots,n} f_{ij}(\beta)$, for $i=1,\ldots,m$.
+We also let $\beta = \beta^+ - \beta^-$, where $\beta^+,\beta^- \geq 0$. Then
+we can formulate the equivalent LP as 
+\begin{align}
+    &\min_{\beta^+, \beta^-,t_1,\ldots,t_m, \lambda_1,\ldots,\lambda_m} \sum_{i=1}^m t_i \hspace{5mm} \text{s.t.}\\
+    &y = X(\beta^+ - \beta^-)\\
+    &t_i - a_{ij}^{\top}(\beta^+ - \beta^-) - b_{ij} - \lambda_i = 0, \text{ for all } j\\
+  %t_i &\geq \max_{j=1,\ldots,n} f_{ij}(\beta^+ + \beta^-)\\
+    &0 \leq \beta^+,\beta^-,t_i,\lambda_i
+\end{align}
 
 
 \subsection{B}
 
 \subsubsection{(a)}
+The steps are:\\
+i. Compute the gradient $g$, where each component is:
+\begin{align}
+    g_i &= \frac{\partial L(y_i,\hat{y}_i)}{\partial \hat{y}_i} =
+    %\frac{\partial \left[ \left( y_i - \sum_{j=1}^M \hat{\beta}_j (x_i)_j
+    %\right)^2 \right]}{\partial \hat{y}_i}
+    \frac{\partial (y_i - \hat{y}_i)^2}{\partial \hat{y}_i} \\
+    &= -2(y_i - \hat{y}_i)
+    = -2 \left( y_i - \sum_{j=1}^M \hat{\beta}_j (x_i)_j \right) \\
+    \implies g &= -2 \left( y - X \hat{\beta} \right)
+\end{align}
+where $y$ is the vector of outputs and $X$ is a matrix where the $i^\text{th}$
+row is $x_i$.
+
+ii. The choice of weak-learner becomes:
+\begin{align}
+    h_j(x) &= \argmin_{\ell \in \{1,\ldots,M\}} \left( \min_{\xi \in
+    \mathbb{R}} \sum_{i=1}^n \left( 2 \left( y_i - \sum_{j=1}^M \hat{\beta}_j
+    (x_i)_j \right) - \xi (x_i)_{\ell} \right)^2 \right) \\
+    &= \argmin_{\ell \in \{1,\ldots,M\}}  \left( \min_{\xi \in
+    \mathbb{R}} \sum_{i=1}^n \left( -g_i - \xi h_{\ell}(x_i) \right)^2 \right) \\
+    &= \argmin_{\ell \in \{1,\ldots,M\}} \left( \min_{\xi \in \mathbb{R}} \left(-g -
+    \xi h_{\ell}\right)^{\top} \left(-g - \xi h_{\ell}\right)\right) 
+    \hspace{4mm}\text{ (in vector form)} \\
+    &= \argmin_{\ell \in \{1,\ldots,M\}} \left( \min_{\xi \in \mathbb{R}}
+    g^{\top}g +\xi^2 h_{\ell}^{\top} h_{\ell} + 2 \xi^{\top}g h_{\ell}   \right)
+\end{align}
+Setting $g^{\top}g +\xi^2 h_{\ell}^{\top} h_{\ell} + 2 \xi^{\top}g h_{\ell}$
+$=$ $0$ and solving gives that $\xi^* = -g^{\top} x_{1:n,\ell}$.
+\begin{align}
+    h_j(x) = \argmin_{\ell \in \{1,\ldots,M\}} \left( -g + g^{\top}
+    x_{1:n,\ell} h_{\ell} \right)^2
+\end{align}
+
+iii. The step size selection becomes:
+\begin{align}
+    \hat{\alpha}_j &= \argmin_{\alpha_j \in \mathbb{R}}
+    \sum_{i=1}^n \left( y_i - \left(\sum_{k=1}^M \hat{\beta}_k (x_i)_k \right)
+        + \alpha_j h_j(x_i) \right)^2 \\
+        &= \argmin_{\alpha_j \in \mathbb{R}} (y - X \hat{\beta} +
+        \vec{1}\alpha_j h_j(x_i))^{\top} (y - X \hat{\beta} + \vec{1}\alpha_j h_j(x_i))
+\end{align}
+Taking the derivative with respect to $\alpha$, setting to $0$, and solving, gives
+\begin{align}
+    \hat{\alpha}_j = -\frac{1}{2} g^{\top} x_{1:n,j}
+\end{align}
+
+iv. And the coefficent (and prediction function) updates become:
+\begin{align}
+    \hat{\beta}_j  &\leftarrow \hat{\beta}_j + \hat{\alpha}_j\\
+    \hat{f}(x) = \sum_{j=1}^M \hat{\beta}_j (x_i)_j &\leftarrow
+    \sum_{j=1}^M \hat{\beta}_j (x_i)_j
+    + \hat{\alpha}_j h_j(x)
+\end{align}
+
+This is similar to the algorithm for forward stagewise regression from
+lecture.
 
 \subsubsection{(b)}
+The steps are:\\
+i. Compute the gradient $g$, where each component is:
+\begin{align}
+    g_i = \frac{\partial L(y_i,\hat{y}_i)}{\partial \hat{y}_i}
+    &= \frac{-2 y_i \exp\{-2 y_i \hat{y_i}\}}
+    {1 + \exp\{-2 y_i \hat{y_i}\}} \\
+    &= \frac{-2 y_i \exp \left\{ -2 y_i \left(\sum_{j=1}^M
+        \hat{\beta}_j h_j(x_i) \right)\right\}}
+        {1 + \exp\left\{-2 y_i \left(\sum_{j=1}^M
+            \hat{\beta}_j h_j(x_i) \right)\right\}}\\
+    &= \frac{-2 y_i}
+        {1 + \exp\left\{2 y_i \left(\sum_{j=1}^M
+            \hat{\beta}_j h_j(x_i)
+            \right) \right\} }
+\end{align}
 
-\subsubsection{(c)}
+ii. The choice of weak-learner becomes:
+\begin{align}
+    h_j(x) = \argmin_{h_{\ell} \in \{h_1,\ldots,h_M\}} \left( \min_{\xi \in
+    \mathbb{R}} \sum_{i=1}^n \left( \frac{2 y_i}
+        {1 + \exp\left\{2 y_i \left(\sum_{k=1}^M
+                \hat{\beta}_k h_k(x_i) \right) \right\} } - \xi h_{\ell}(x_i)
+                \right)^2 \right)
+\end{align}
 
+iii. The step size selection becomes:
+\begin{align}
+    \hat{\alpha}_j = \argmin_{\alpha_j \in \mathbb{R}}
+    \sum_{i=1}^n \left( y_i - \left(\sum_{k=1}^M \hat{\beta}_k (x_i)_k \right)
+        + \alpha_j h_j(x_i) 
+        %\text{ sign}\hspace{-1mm}\left( \left(\sum_{k=1}^M \hat{\beta}_k
+        %(x_i)_k \right) + \alpha_j h_j(x_i) \right)
+        \right)^2
+\end{align}
+iv. And the coefficent (and prediction function) updates become:
+\begin{align}
+    \hat{\beta}_j  &\leftarrow \hat{\beta}_j + \hat{\alpha}_j\\
+     \text{ sign}\hspace{-1mm} \left(\hat{f}(x)\right) = \text{
+     sign}\hspace{-1mm}\left( \sum_{j=1}^M \hat{\beta}_j (x_i)_j \right)
+     &\leftarrow \text{ sign}\hspace{-1mm} \left( \left( \sum_{j=1}^M
+     \hat{\beta}_j (x_i)_j \right) + \hat{\alpha}_j h_j(x) \right)
+\end{align}
+
+From this formulation, it seems that, in this case, $\hat{\alpha}$ cannot be
+determined explicitly (i.e. cannot be analytically solved). An alternative
+fitting method for $\hat{\alpha}$ might to optimize it via numerical techniques 
+(such as backtracking line  search).
 
 \end{document}
