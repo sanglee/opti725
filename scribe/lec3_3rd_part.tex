@@ -1,0 +1,144 @@
+\section{Summary of the simplex algorithm}
+
+The simplex algorithm can be used for linear programs in standard form:
+\begin{equation}
+\begin{aligned}
+& \underset{x \geq 0}{\text{minimize}}
+& & c^Tx \\
+& \text{subject to}
+& & Ax = b,
+\end{aligned}
+\label{eqn:lp_stdform}
+\end{equation}
+where $c,x\in\mathbb{R}^n$, $A\in\mathbb{R}^{m \times n}$, and $b\in\mathbb{R}^m$.
+
+
+\begin{theorem}
+A basic feasible solution is optimal with total cost $z_0$ if all relative cost factors are nonnegative; i.e., if $c \geq 0 \in\mathbb{R}^n$.
+\end{theorem}
+\begin{proof}
+\begin{eqnarray}
+\begin{aligned}
+-z & & &+& c_{m+1}x_{m+1} &+& ... &+& c_jx_j &+& ... &+& c_nx_n &=& &-z_0& \\
+& x_1 & &+& a_{1,m+1}x_{m+1} &+& ... &+& a_{1,j}x_j &+& ... &+& a_{1,n}x_n &=& &b_1& \\
+& & \ddots & & & \vdots & & & & & & & & & & \vdots\\
+& & x_m &+& a_{m,m+1}x_{m+1} &+& ... &+& a_{m,j}x_j &+& ... &+& a_{m,n}x_n &=& &b_m&
+\end{aligned}
+\end{eqnarray}
+Since $c \geq 0$, increasing any $x_j: j\in\lbrace 1,...,m \rbrace$ (and adjusting the other $x_j$'s to obey the equality constraints) cannot decrease the objective $z$.
+\end{proof}
+\begin{theorem}
+A basic feasible solution is the \emph{unique} optimal solution with total cost $z_0$ if $c_j > 0$ for all non-basic variables.
+\end{theorem}
+\begin{theorem}
+Assuming ``non-degeneracy'' at each iteration (i.e., $b > 0 \in\mathbb{R}^m$), the simplex algorithm converges in finitely many steps.
+\end{theorem}
+\begin{proof}
+If a linear program is nondegenerate, then it does not have any redundant constraints. Therefore, it is not possible to cycle through any of the finite number of bases (i.e., selections of basic variables) when executing the simplex algorithm.
+\end{proof}
+
+\section{Phase I}
+Phase I finds a starting basic feasible solution in canonical form, which Phase II then improves to the optimal solution.
+
+Introduce $m$ new optimization variables to the original linear program in (\ref{eqn:lp_stdform}), one for each row of the constraint matrix: $x _\text{new}= \left[x_1,...,x_n,x_{n+1},...,x_{n+m}\right]^T$ and augment the constraint matrix $A_\text{new} = [A \;\; I_m]$. Solve the new linear program
+\begin{equation}
+\begin{aligned}
+& \underset{x_\text{new} \geq 0}{\text{minimize}}
+& & w = \sum_{i=n+1}^{n+m} x_{\text{new},i} \\
+& \text{subject to}
+& & A_\text{new}x_\text{new} = b.
+\end{aligned}
+\label{eqn:lp_phase1}
+\end{equation}
+
+\begin{theorem}
+\label{thm:phase-opt}
+(\ref{eqn:lp_phase1}) has a feasible optimal solution such that $x_{n+1} = ... = x_{n+m} = 0$ iff (\ref{eqn:lp_stdform}) has a feasible solution.
+\end{theorem}
+
+\section{Example of the simplex algorithm}
+
+The minimization problem:
+
+\begin{equation}
+\begin{aligned}
+\underset{x \geq 0}{\text{minimize}}
+& & 2&x_1 + &x_2 + &2x_3 + &x_4 + &4x_5 &=& z \\
+\text{subject to}
+& & &4x_1 + &2x_2 + &13x_3 + &3x_4 + &x_5 &=& 17 \\
+& & &x_1 + &x_2 + &5x_3 + &x_4 + &x_5 &=& 7.
+\end{aligned}
+\label{eqn:simplex_ex}
+\end{equation}
+
+\subsection{Phase I}
+Introduce two new optimization variables, $x_6,x_7 \geq 0$, disregard the original optimization objective, and solve the new minimization problem
+\begin{equation}
+\begin{aligned}
+\underset{x \geq 0}{\text{minimize}}
+& &&&&& &x_6 + &x_7 &=& w \\
+\text{subject to}
+& &4x_1 + &2x_2 + &13x_3 + &3x_4 + &x_5 + &x_6 + &0x_7 &=& 17 \\
+& &x_1 + &x_2 + &5x_3 + &x_4 + &x_5 + &0x_6 + &x_7 &=& 7.
+\end{aligned}
+\label{eqn:simplex_ex_new}
+\end{equation}
+
+The following stages of the algorithm are shown in tableaux form.
+
+First, convert the problem to canonical form by subtracting the two constraint equations from the objective to give the basic variables ($x_6,x_7$) zero coefficients in the objective:
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+Basic variable &$x_1$ &$x_2$ &$x_3$ &$x_4$ &$x_5$ &$x_6$ &$x_7$ &RHS \\
+\hline
+$-w$	&-5	&-3	&-18 &-4 &-2 &0 &0 &-24 \\
+$x_6$	&4 &2 &13 &3 &1 &1 &0 &17 \\
+$x_7$ &1 &1 &5 &1 &1 &0 &1 &7 \\
+\hline
+\end{tabular}
+\end{center}
+
+Since $c_3 = -18 = \min c_j < 0$, pivot on $x_3$. $x_3$ will replace $x_6$ as a basic variable since $r_6 = \frac{17}{13} < \frac{7}{5} = r_7$:
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+Basic variable &$x_1$ &$x_2$ &$x_3$ &$x_4$ &$x_5$ &$x_6$ &$x_7$ &RHS \\
+\hline
+$-w$	&7/13 &-3/13 &0 &2/13 &-8/13 &18/13 &0 &-6/13 \\
+$x_3$	&4/13 &2/13 &1 &3/13 &1/13 &1/13 &0 &17/13 \\
+$x_7$ &-7/13 &3/13 &0 &-2/13 &8/13 &-5/13 &1 &6/13 \\
+\hline
+\end{tabular}
+\end{center}
+
+Now $c_5 = -8/13 = \min c_j < 0$, so pivot on $x_5$. Because $r_7 = \frac{6/13}{8/13} < \frac{17/13}{1/13} = r_3$, $x_7$ will go out when $x_5$ comes in:
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+Basic variable &$x_1$ &$x_2$ &$x_3$ &$x_4$ &$x_5$ &$x_6$ &$x_7$ &RHS \\
+\hline
+$-w$	&0 &0 &0 &0 &0 &1 &1 &0 \\
+$x_3$	&3/8 &1/8 &1 &1/4 &0 &1/8 &-1/8 &5/4 \\
+$x_5$ &-7/8 &3/8 &0 &-1/4 &1 &-5/8 &13/8 &3/4 \\
+\hline
+\end{tabular}
+\end{center}
+
+Since $c \geq 0$, we have reached an optimal feasible solution to (\ref{eqn:simplex_ex_new}). Set the nonbasic variables to zero: $x_1 = x_2 = x_4 = x_6 = x_7 = 0$; set the basic variables to the RHS: $x_3 = 5/4$ and $x_5 = 3/4$.
+
+\subsection{Phase II}
+By Theorem~\ref{thm:phase-opt}, the optimal feasible solution found in Phase I will also be a feasible solution to the original linear program, with the original minimization objective, $z = 2x_1 + x_2 + 2x_3 + x_4 + 4x_5$. We can include this cost function in the previous table and continue with Phase II to improve this feasible solution:
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+Basic variable &$x_1$ &$x_2$ &$x_3$ &$x_4$ &$x_5$ &$x_6$ &$x_7$ &RHS \\
+\hline
+$-z$	&2 &1 &2 &1 &4 &0 &0 &0 \\
+$x_3$	&3/8 &1/8 &1 &1/4 &0 &1/8 &-1/8 &5/4 \\
+$x_5$ &-7/8 &3/8 &0 &-1/4 &1 &-5/8 &13/8 &3/4 \\
+\hline
+\end{tabular}
+\end{center}
+
+The final solution to this linear program is $x = \left[0, 2, 1, 0, 0\right]^T$, which achieves $z = 4$.

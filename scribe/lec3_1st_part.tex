@@ -1,0 +1,191 @@
+\section{Pivot Transformation}
+Consider the following LP problem
+
+\begin{equation}
+    \begin{split}
+        \min z \hspace{4mm}\text{s.t.} \\
+        2 x_1 + 2 x_2 + 2 x_3 + x_4 + 4 x_5 = z \\
+        4 x_1 + 2 x_2 + 13 x_3 + 3 x_4 + x_5 = 17 \\
+        x_1 + x_2 + 5 x_3 + x_4 + x_5 = 7 \\
+        x_1, \ldots, x_5 \geq 0
+    \end{split}
+\end{equation}
+
+We define a \textbf{pivot} to be a nonzero element in the above problem, for example
+$3x_4$. We choose a pivot, then use it to eliminate the corresponding variable
+(in this case, $x_4$) from the remaining equations. After we apply a pivot
+transformation we arrive at an equivalent system of equations, where the
+solution set is left the same. This process is equivalent to Gaussian
+elimination. The pivot transformation procedes as follows.
+
+We begin with an initial system of equations
+\begin{eqnarray}
+    \label{example01}
+    \begin{aligned}
+        && 2x_1 &&+&& 2x_2 &&+&& 2x_3 &&+&& x_4 &&+&& 4x_5 &&=&& z& \\
+        && 4x_1 &&+&& 2x_2 &&+&& 13x_3 &&+&& 3x_4 &&+&& x_5 &&=&& 17& \\
+        &&  x_1 &&+&& x_2 &&+&& 5x_3 &&+&& x_4 &&+&& x_5 &&=&& 7& \\
+    \end{aligned}
+\end{eqnarray}
+
+We choose $3x_4$ as a pivot and aim to eliminate $x_4$ from the remaining equations. We begin by dividing the second equation by $3$ to get the system
+\begin{eqnarray}
+    \label{example01}
+    \begin{aligned}
+        && 2x_1 &&+&& 2x_2 &&+&& 2x_3 &&+&& x_4 &&+&& 4x_5 &&=&& z& \\
+        && \frac{4x_1}{3} &&+&& \frac{2x_2}{3} &&+&& \frac{13x_3}{3} &&+&& x_4
+            &&+&& \frac{x_5}{3} &&=&& \frac{17}{3}& \\
+        &&  x_1 &&+&& x_2 &&+&& 5x_3 &&+&& x_4 &&+&& x_5 &&=&& 7& \\
+    \end{aligned}
+\end{eqnarray}
+
+Note that the coefficients for $x_4$ in the first and third equations are now
+the same as the coefficient for $x_4$ in the second equation. We then subtract
+the the second equation from the first and third equations to get
+\begin{eqnarray}
+    \label{example01}
+    \begin{aligned}
+        && \frac{2x_1}{3} &&+&& \frac{4x_2}{3} &&-&& \frac{7x_3}{3} &&+&& 0x_4
+            &&+&& \frac{11x_5}{3} &&=&& z - \frac{17}{3}& \\
+        && \frac{4x_1}{3} &&+&& \frac{2x_2}{3} &&+&& \frac{13x_3}{3} &&+&& x_4
+            &&+&& \frac{x_5}{3} &&=&& \frac{17}{3}& \\
+        && -\frac{x_1}{3} &&+&& \frac{x_2}{3} &&+&& \frac{2x_3}{3} &&+&& 0x_4
+            &&+&& \frac{2x_5}{3} &&=&& \frac{4}{3}& \\
+    \end{aligned}
+\end{eqnarray}
+
+Note that now $x_4$ has been eliminated from equations one and three (i.e. the
+coefficient for $x_4$ in these equations is now $0$). Next, we choose another
+pivot, such as $\frac{x_2}{3}$. We use this pivot (in the third equation) to
+eliminate $x_2$ from the first and second equations by subtracting $4$-times
+the third equation from the first equation, to get
+\begin{eqnarray}
+    \label{example01}
+    \begin{aligned}
+        && 2x_1 &&+&& 0x_2 &&-&& 5x_3 &&+&& 0x_4 &&+&& x_5 &&=&& z -11& \\
+        && \frac{4x_1}{3} &&+&& \frac{2x_2}{3} &&+&& \frac{13x_3}{3} &&+&& x_4
+            &&+&& \frac{x_5}{3} &&=&& \frac{17}{3}& \\
+        && -\frac{x_1}{3} &&+&& \frac{x_2}{3} &&+&& \frac{2x_3}{3} &&+&& 0x_4
+            &&+&& \frac{2x_5}{3} &&=&& \frac{4}{3}& \\
+    \end{aligned}
+\end{eqnarray}
+And then by subtracting $2$-times the third equation from the second equation,
+to get 
+\begin{eqnarray}
+    \label{example01}
+    \begin{aligned}
+        && 2x_1 &&+&& 0x_2 &&-&& 5x_3 &&+&& 0x_4 &&+&& x_5 &&=&& z -11& \\
+        && 2x_1 &&+&& 0x_2 &&+&& 3x_3 &&+&& x_4 &&-&& x_5 &&=&& 3& \\
+        && -\frac{x_1}{3} &&+&& \frac{x_2}{3} &&+&& \frac{2x_3}{3} &&+&& 0x_4
+            &&+&& \frac{2x_5}{3} &&=&& \frac{4}{3}& \\
+    \end{aligned}
+\end{eqnarray}
+
+We also multiply the third equation by $3$ to get
+\begin{eqnarray}
+    \label{example01}
+    \begin{aligned}
+        && 2x_1 &&+&& 0x_2 &&-&& 5x_3 &&+&& 0x_4 &&+&& x_5 &&=&& z -11& \\
+        && 2x_1 &&+&& 0x_2 &&+&& 3x_3 &&+&& x_4 &&-&& x_5 &&=&& 3& \\
+        && -x_1 &&+&& x_2 &&+&& 2x_3 &&+&& 0x_4 &&+&& 2x_5 &&=&& 4& \\
+    \end{aligned}
+\end{eqnarray}
+
+We can now rewrite this as
+\begin{eqnarray}
+    \label{example01}
+    \begin{aligned}
+        -z \hspace{4mm}+ && 2x_1 &&+&& 0x_2 &&-&& 5x_3 &&+&& 0x_4 &&+&& x_5 &&=&& -11& \\
+        && 2x_1 &&+&& 0x_2 &&+&& 3x_3 &&+&& x_4 &&-&& x_5 &&=&& 3& \\
+        && -x_1 &&+&& x_2 &&+&& 2x_3 &&+&& 0x_4 &&+&& 2x_5 &&=&& 4& \\
+    \end{aligned}
+\end{eqnarray}
+
+The system written in this way is said to be in \textbf{canonical form}. In
+particular, we say that this system of equations is in canonical form with
+respect to $(-z)$, $x_4$, and $x_2$ variables, and that 
+\begin{align*}
+    x_1, x_3, x_5 &\text{ are independent (nonbasic) variables} \\
+    -z, x_4, x_2 &\text{ are dependent (basic) variables, which are expressed
+        in terms of other variables.}
+\end{align*}
+
+If we set the nonbasic variables to zero, then we can get values for the basic
+variables. For example, setting $x_1=0$, $x_3=0$, and $x_5=0$, i.e. by setting
+$X_N = (x_1,x_3,x_5) = (0,0,0)$ we get that $z=11$, $X_B = (x_4,x_2) = (3,4)$.
+
+Note that if we had initially started with a different pivot, say $x_1$ and
+then $x_4$ (instead of $x_4$ and then $x_2$), then we would've arrived at
+$z=3$, $X_N = (x_2,x_3,x_5) = (0,0,0)$, and $X_B = (x_1,x_4) = (-4,11)$.
+
+
+\subsection{The Goals of Pivots}
+The primary goal of the pivoting procedure is to reduce the original LP problem
+to canonical form. After a reduction to canonical form, it is easy to find a
+(basic) solution to the system of equations. To do so, we simply set the
+nonbasic variables to zero. Note that this procedure returns a valid solution,
+because the pivoting process does not alter the solution set of the system of
+equations (i.e. after pivots, the systems are equivalent).
+
+However, the basic solution returned by the pivoting process might be:
+\begin{enumerate}
+    \item Not a feasible solution. This could occur because of the boundary
+        constraint (e.g. we required that $x_1,\ldots,x_5>0$, in the case of the
+        previous example).
+    \item Not an optimal solution. For example, $z$ might not be minimal.
+\end{enumerate}
+
+
+\subsection{Formal Definition of Canonical Form}
+A system of $m$ equations and $n$ nonbasic variables $(x_j)_{j=1}^n$ is in
+\textbf{canonical form} with respect to $m$ basic variables $(x_{j_i})_{i=1}^m$
+if and only if either of the two equivalent conditions hold:
+\begin{enumerate}
+    \item $x_{j_i}$ has one coefficient in equation $i$, for all $j \neq i$.
+    \item The system $I_m X_B + A X_N = b$
+\end{enumerate}
+
+Using the previous example, the second condition would be equivalent to
+\begin{align*}
+    M = 
+    \begin{bmatrix}
+        1 & 0 & 0\\
+        0 & 1 & 0\\
+        0 & 0 & 1
+    \end{bmatrix}
+    \begin{bmatrix}
+        -z\\
+        x_4\\
+        x_2
+    \end{bmatrix}
+    +
+    \begin{bmatrix}
+        2   &   -5  &   1   \\
+        2   &   3   &   -1  \\
+        -1  &   2   &   2 
+    \end{bmatrix}
+    \begin{bmatrix}
+        x_1\\
+        x_3\\
+        x_5
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        -11 \\
+        3   \\
+        4 
+    \end{bmatrix}
+\end{align*}
+
+
+We more-formally define a \textbf{basic solution} to be the solution gained by
+setting $X_N=0$ in the canonical form.
+
+For example, if we let
+\begin{align*}
+    X_B = (x_1,\ldots,x_m)\\
+    X_N = (x_{m+1},\ldots,x_n)
+\end{align*}
+then we'd set $x_{m+1},\ldots,x_n = 0$, and would arrive at the solutions
+$x_1=b_1,\ldots,x_m=b_m$. This basic solution is feasible if and only if $b_1
+\geq 0,\ldots,b_m \geq 0$.

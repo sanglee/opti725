@@ -1,0 +1,208 @@
+\section{Warming up to the simplex algorithm}
+\subsection{Starting from Canonical Form}
+Let's assume that we have a system of equations in canonical form, as well as a feasible basic solution:
+
+w
+
+Recall that we have the additional constraints that $x_i \geq 0 \forall i=1,...,n$, and that the coefficients $c_i$ are called relative cost factors (these may be different in a different canonical form basis). This system can be written in matrix notation as well:
+
+\begin{equation}
+\begin{bmatrix}
+1 & 0 & C \\
+0 & I_m & A \\
+\end{bmatrix}
+\begin{bmatrix}
+-z \\
+x_B \\
+x_N \\
+\end{bmatrix}
+=
+\begin{bmatrix}
+-z_0 \\
+b \\
+\end{bmatrix}
+\end{equation}
+
+In this form, the basic solution is $z = z_0$, and the assignments are $x_B = b$ and $x_N = 0$.  The solution is feasible if and only if $b \geq 0$.
+
+\subsection{Improving a Nonoptimal Basic Solution}
+Let's continue the example from the previous section:
+
+\begin{eqnarray}
+\label{example_canonical}
+\begin{aligned}
+-z && + && 2x_1 &&+&& 0x_2 && - && 5x_3 && + && 0x_4 && + && 1x_5 &&=&&-11& \\
+&&&& 2x_1 &&+&& 0x_2 &&+ && 3x_3 && + && 1x_4 & &- && 1x_5 &&=&& 3 & \\
+&& - && x_1 &&+&& 1x_2 && + && 2x_3 && + && 0x_4 && +&& 2x_5 &&=&& 4 & \\
+\end{aligned}
+\end{eqnarray}
+
+The basic feasible solution here is that $z = 11$, with assignments $x_B = (x_4, x_2) = (3,4)$ and $x_N = (x_1,x_3,x_5) = (0,0,0)$.
+
+Recall that our goal is to minimize $z$ such that $x_i \geq 0$.  How can we improve our current solution?
+
+Examine the relative cost factors of the variables in $x_N$, and notice that $x_3$ has a negative cost factor. If we make $x_3 > 0$, we have a chance to reduce z.
+
+To see how much we can increase $x_3$ while maintaining feasibility, we keep $x_3, -z,$ and $x_B = (x_2, x_4)$ as parameters while setting $x_N = (x_1,x_5) = (0,0)$.  Our system now becomes:
+
+\begin{eqnarray}
+\begin{aligned}
+z && = && 11 && - && 5x_3 & \\
+x_4 &&=&& 3 && - &&3x_3 &\\
+x_2 &&=&& 4 && - && 2x_3 &\\
+\end{aligned}
+\end{eqnarray}
+
+So we can decrease $x_3$ as much as we want as long as $x_4 \geq 0$ and $x_2 \geq 0$.  The limiting factor in this case is $x_4$ which is 0 when $x_3 = 1$. If we think of this in matrix form as $Ax = b$:
+
+\begin{equation}
+\begin{bmatrix}
+2 & 0 & 3 & 1 & -1 \\
+-1 & 1 & 2 & 0 & 2 \\
+\end{bmatrix}
+\begin{bmatrix}
+0\\x_2\\x_3\\x_4\\0\\
+\end{bmatrix}
+=
+\begin{bmatrix}
+3\\4\\
+\end{bmatrix}
+\end{equation}
+
+We are comparing the ratios $\frac{b_1}{A_{13}} = \frac{3}{3} = 1$ and $\frac{b_2}{A_{23}} = \frac{4}{2} = 2$, so in this case $\frac{b_1}{A_{13}} < \frac{b_2}{A_{23}}$.  The conclusion is the same: we can only increase $x_3$ enough to make $x_4 = 0$.
+
+Thus, we move $x_4$ from $x_B$ to $x_N$, and $x_3$ moves into $x_B$.
+
+This is equivalent to taking equation \ref{example_canonical} and using Gaussian elimination with $x_3$ as a pivot variable:
+
+\begin{eqnarray}
+\begin{aligned}
+-z && + && 2x_1 &&+&& 0x_2 && - && 5x_3 && + && 0x_4 && + && 1x_5 &&=&&-11& \\
+&&&& 2x_1 &&+&& 0x_2 &&+ && 3x_3 && + && 1x_4 & &- && 1x_5 &&=&& 3 & \\
+&& - && x_1 &&+&& 1x_2 && + && 2x_3 && + && 0x_4 && + && 2x_5 &&=&& 4 & \\
+\end{aligned}
+\end{eqnarray}
+
+We perform three changes: multiply the second equation by $\frac{5}{3}$ and add it to the first equation, multiply the second equation by $\frac{-2}{3}$ and add it to the third equation, and finally divide the second equation by 3. This gets us:
+
+\begin{eqnarray}
+\begin{aligned}
+-z && + && (\frac{10}{3} + 2) x_1 &&+&& 0x_2 && + && 0x_3 && + && \frac{5}{3}x_4 && + && (1 - \frac{5}{3})x_5 &&=&&-11+5& \\
+&&&& \frac{2}{3}x_1 &&+&& 0x_2 &&+ && 1x_3 && + && \frac{1}{3}x_4 & &- && \frac{1}{3}x_5 &&=&& 1 & \\
+&&&& (-\frac{4}{3} - 1)x_1 &&+&& 1x_2 && + && 0x_3 && - && \frac{2}{3}x_4 && + && (2+\frac{2}{3})x_5 &&=&& 4-2 & \\
+\end{aligned}
+\end{eqnarray}
+
+Simplifying:
+
+\begin{eqnarray}
+\label{example_x3pivot}
+\begin{aligned}
+-z && + && \frac{16}{3} x_1 &&+&& 0x_2 && + && 0x_3 && + && \frac{5}{3}x_4 && - && \frac{2}{3}x_5 &&=&&-6& \\
+&&&& \frac{2}{3}x_1 &&+&& 0x_2 &&+ && 1x_3 && + && \frac{1}{3}x_4 & &- && \frac{1}{3}x_5 &&=&& 1 & \\
+&&-&& \frac{7}{3}x_1 &&+&& 1x_2 && + && 0x_3 && - && \frac{2}{3}x_4 && + && \frac{8}{3}x_5 &&=&& 2 & \\
+\end{aligned}
+\end{eqnarray}
+
+Now the current solution is $z = 6$, with assignments $x_N = (x_1,x_4,x_5) = (0,0,0)$ and $x_B = (x_3,x_2) = (1, 2)$. Examining the first equation, we now see that $c_5 < 0$, so we can improve our current solution by increasing $x_5$ the same way we just increased $x_3$. Just as before, we keep $z, x_B, x_5$ as parameters and set $x_N$ to 0 so that our system becomes:
+
+\begin{eqnarray}
+\begin{aligned}
+z && = && 6 && - && \frac{2}{3}x_5 & \\
+x_3 &&=&& 1 && + &&\frac{1}{3}x_5 &\\
+x_2 &&=&& 2 && - && \frac{8}{3}x_5 &\\
+\end{aligned}
+\end{eqnarray}
+
+In this case how much we can increase $x_5$ is limited only by $x_2$. In matrix form we have:
+
+\begin{equation}
+\begin{bmatrix}
+\frac{2}{3} & 0 & 1 & \frac{1}{3} & -\frac{1}{3} \\
+-\frac{7}{3} & 1 & 0 & -\frac{2}{3} & \frac{8}{3} \\
+\end{bmatrix}
+\begin{bmatrix}
+0\\x_2\\x_3\\0\\x_5\\
+\end{bmatrix}
+=
+\begin{bmatrix}
+1\\2\\
+\end{bmatrix}
+\end{equation}
+
+Performing the same comparison as before, between $\frac{b_1}{A_{15}}$ and $\frac{b_2}{A_{25}}$, we get that $-3 < \frac{3}{4}$, however, we want to keep every $x_i \geq 0$, so again, the limiting factor is $x_2$. Note that if both of these ratios were less than zero, we could minimize $z$ to $-\infty$ by increasing $x_5$.
+
+We can thus pivot on $x_5$ by setting it to $\frac{3}{4}$. While we could pivot on either equation containing $x_5$ in \ref{example_x3pivot}, the only pivot that will get us a feasible solution is the one that moves $x_2$ into $x_N$.  Applying Gaussian elimination by pivoting on $x_5$ in the third equation, our system is now:
+
+\begin{eqnarray}
+\begin{aligned}
+-z && + && \frac{57}{12} x_1 &&+&& \frac{1}{4}x_2 && + && 0x_3 && + && \frac{3}{2}x_4 && + && 0x_5 &&=&&-\frac{11}{2}& \\
+&&&& \frac{3}{8}x_1 &&+&& \frac{1}{8}x_2 &&+ && 1x_3 && + && \frac{1}{4}x_4 & &- && 0x_5 &&=&& \frac{5}{4} & \\
+&&-&& \frac{7}{8}x_1 &&+&& \frac{3}{8}x_2 && + && 0x_3 && - && \frac{2}{8}x_4 && + && 1x_5 &&=&& \frac{3}{4} & \\
+\end{aligned}
+\end{eqnarray}
+
+The solution is that $z = \frac{11}{2}$, with $x_B = (x_3, x_5) = (\frac{5}{4}, \frac{3}{4})$ and $x_N = (x_1,x_2,x_4) = (0,0,0)$. Looking at the first equation, we see that every cost factor is positive, meaning that we cannot improve $z$ any further - we're done!
+
+\section{The Simplex Algorithm}
+
+\subsection{Key Components of the Algorithm}
+In this example, we traced the simplex algorithm by hand. The key takeaways are:
+
+\begin{enumerate}
+\item
+We check for optimality by making sure that each $c_j \geq 0 \forall j$. If this holds, then our basic feasible solution is optimal.
+\item
+If the optimality condition is not met, we then must bring one variable into $x_B$ (the variable with the most negaive $c_j$), and send another variable to $x_N$ in exchange.
+\item
+We choose the variable to send to $x_N$ by ensuring that our non-negativity constraints ($x_j \geq 0 \forall j$) are met.
+\end{enumerate}
+\subsection{Overview of Algorithm Steps}
+
+In the simplex algorithm, we assume that we start with a system in feasible canonical form:
+
+\begin{eqnarray}
+\begin{aligned}
+-z && + && 0x_B && = && C^Tx_N && = &&-z_0 \\
+&&&&Ix_B && + && Ax_N &&=&& b &\\
+\end{aligned}
+\end{eqnarray}
+
+The starting solution is $x_B = b$, $x_N = 0$, and $z = z_0$.
+
+Then we complete the following steps:
+
+\begin{enumerate}
+\item
+Find the smallest reduced cost, i.e. find $c_s = min_jc_j$ and $s = argmin_j c_j$
+\item
+Test for optimality: if $c_s \geq 0$ return the current solution and stop.
+\item
+If $c_s < 0$, then we move $x_s$ to $x_B$
+\item
+Test for unbounded z: if every entry in the $s^{th}$ column of $A$, then $z* = -\infty$ by setting $x_s \to \infty$
+\item
+If z is bounded, then we choose the variable to move to $x_N$ in exchange for $x_s$.  We find $r = argmin_{i|A_{is} > 0} \frac{b_i}{A_{is}}$  Thus we pivot on the basic variable that is in the $r^th$ row of $A$.
+\item
+Pivot on $A_{rs}$ to get a new basic feasible solution $\tilde{z}$, regardless of whether $z$ changes (if $b_r = 0$, it will not change $z$). $\tilde{z} = z_0 - b_r\frac{-c_s}{A_{rs}}$
+\end{enumerate}
+
+How do we know that our solution (following the method in step 5) will still be feasible?
+
+\begin{lemma} The new basic solution remains feasible, $\tilde{b_j} \geq 0 \forall j$ \end{lemma}
+\begin{proof}
+\begin{equation}
+\tilde{b_j} = b_j - b_r\frac{A_{js}}{A_{rs}}
+\end{equation}
+Assume $b_j \geq 0$ (i.e. that the previous solution was feasible). If $A_{js} \leq 0$, then $\tilde{b_j} \geq 0 0$. If $A_{js} > 0$, then recall that we chose $r$ so that $\frac{b_r}{A_{rs}} \leq \frac{b_j}{A_{js}} \forall j$.  Thus, $\tilde{b_j} \geq 0$.
+\end{proof}
+
+Notice that in step 6 we specifically stated that $z$ does not have to change. This could potentially lead to an infinite cycle between values that do not change $z$.  We can prevent this by using Bland's Rule:
+
+Whenever the pivot in the simplex method would result in not change of the objective $z$, do the following:
+\begin{enumerate}
+\item 
+Choose from among the incoming column choices $j \in s$  s.t. $c_j < 0$ the column with the smallest index $j$. (Step 3)
+\item
+Choose from among the multiple outgoing column choices the eligible column with the smallest index. (Step 5)
+\end{enumerate}
