@@ -1,0 +1,81 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb,amsmath}
+\usepackage[parfill]{parskip}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\usepackage{graphicx}
+\usepackage[top=1in, bottom=1.5in, left=1.5in, right=1.5in]{geometry}
+
+
+\title{Optimization 10/36-725, 
+        Homework 2, Problem 1}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+\vspace{-5mm}
+
+\textbf{(A)} First I will prove that $S$ is convex. Suppose not. Then $\exists$
+$x,y \in S$, s.t. $z = \theta x + (1 - \theta) y$ $\not\in S$ (for $\theta \in
+[0,1]$) $\implies$ $f(z) > f(x) = f(y)$ $\implies$ $f(\theta x + (1 -
+\theta)y)$ $>$ $f(x) = f(y) = \theta f(x) + (1-\theta)f(y)$, which contradicts
+the convexity of $f$, and thus $S$ is convex.
+
+Next I'll prove, for strictly convex $f$, $S$ has one element. Suppose not.
+Then $x \neq y \in S$ $\implies \theta x + (1 - \theta)y \in S$ (since $S$
+convex by the above argument), $\implies f(\theta x + (1-\theta)y) = f(x) =
+f(y) = \theta f(x) + (1-\theta)f(y)$, which contradicts the strict convexity of
+$f$, and thus $S$ has a single element.\\
+
+
+\textbf{(B)} They are all equal to 1, since the singular values of $A$ are the eigenvalues
+of $A^{\top}A$, which equals (when $A$ orthogonal) $I_n$, whose eigenvalues are
+all 1.
+
+Consider $I_2$ and $-I_2$, where an example convex combination is $0.5 I_2 -
+0.5I_2 = \mathbf{0}$, which is not orthogonal.\\
+
+
+\textbf{(C)} For orthogonal $A_1,\ldots,A_n$, $\| \sum_{i=1}^n \theta_i A_i \|_{op}$ $\leq$
+$\sum_{i=1}^n \theta_i \| A_i \|_{op}$ $\leq \sum_{i=1}^n \theta_i$ $= 1$
+(where $\theta_i$s are coefficients of convex combination).
+
+Let $S = \{A : \|A\|_{op} \leq 1 \}$. $\forall A_1, A_2 \in S$, $\|\theta A_1 +
+(1-\theta)A_2\|_{op}$ $\leq$ $\theta \|A_1\|_{op} + (1-\theta)\|A_2\|_{op}$
+$\leq \theta + (1-\theta)$ $=1$ $\implies$ $\theta A_1 + (1-\theta)A_2 \in S$
+and S is convex.
+
+By the reverse triangle inequality, $\|A-B\|_{op} \geq \left| \|A\|_{op} -
+\|B\|_{op} \right|$ $\implies$ it is Lipschitz with $L=1$.\\
+
+
+\textbf{(D)} Let $S$ be the unit spectral norm ball and $C$ the convex hull of orthogonal
+matrices. Part (C) implies $C$ $\subset$ $S$. We will now show that $S$
+$\subset$ $C$: Let $A \in S$ and $A$ $=$ $U \Sigma V^{\top}$ (its SVD), where
+we have added additional zeros to the diagonal of $\Sigma$ and orthogonal unit
+vector rows to $U$ and $V^{\top}$, so that $U,\Sigma,V^{\top}$ $\in$
+$\mathbb{R}^{n \times n}$ (note that $U$, $\Sigma$, and $V^{\top}$ indeed exist
+and their product still equals $A$). Now, we can write $\Sigma =
+\sum_{i=1}^{2^n} \theta_i (\tilde{I}_n)_i$, where $\sum_{i=1}^{2^n} \theta_i =
+1$, and $\{\tilde{I}_n\}_{i=1}^{2^n}$ are all $n \times n$ diagonal matrices
+containing only $1$s and $-1s$ ($\Sigma$ can be decomposed into this sum, since
+we have a system of $n+1$ equations of $2^n$ variables, and thus there exists a
+solution $\{\theta_i\}_{i=1}^{2^n}$). Hence, $A = U (\sum_{i=1}^{2^n} \theta_i
+(\tilde{I}_n)_i)V^{\top}$ $=$ $\sum_{i=1}^{2^n} \theta_i U(\tilde{I}_n)_i
+V^{\top}$. Since $U$, $V^{\top}$, and $(\tilde{I}_n)_i$ are all orthogonal,
+their product is orthogonal, and thus $\|A\|_{op}$ $\leq$ $\sum_{i=1}^{2^n}
+\theta_i \|U (\tilde{I}_n)_i V^{\top}\|_{op}$ $\leq$ $\sum_{i=1}^{2^n}
+\theta_i$ $\leq$ $1$ $\implies$ $S \subset C$.\\
+
+
+\textbf{(E)} We know that $(\partial_y - \partial_x)^{\top}(y-x)$ $\geq$
+$\lambda \|y-x\|^2$ $\implies$ $(\partial_y - \partial_x)^{\top}(y-x)$ $\leq$
+$\|\partial_y-\partial_x\| \|y-x\|$
+
+If, additionally, its gradient is $L$-Lipschitz, we can say that 
+
+
+\end{document}

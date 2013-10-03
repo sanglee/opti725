@@ -1,0 +1,33 @@
+\input{header}
+
+\section{Problem Two}
+
+\textbf{(A)}  Let the SVD of $U V^\top + W = B S C^\top$. Then we have
+\begin{flalign}
+    &U V^\top + W = B S C^\top\\
+    \iff &UV^\top = B S C^\top - W \\
+    \iff &UV^\top V  = (B S C^\top - W)V\\
+    \iff &U = B S C^\top V - WV &\rhd V \text{ orthogonal}\\
+    \iff &U = B S C^\top V &\rhd WV=0\\
+    \iff &B^\top U V^\top = B^\top B S C^\top V V^\top \\
+    \iff &B^\top U V^\top = S C^\top  &\rhd B \text{ and } V \text{ orthogonal}\\
+    \iff &B^\top U V^\top C = S C^\top C\\
+    \iff &B^\top U V^\top C = S  &\rhd C \text{ orthogonal}\\
+    \iff &\| B^\top U V^\top C \|_{op} = \|S\|_{op}
+\end{flalign}
+And $\| B^\top U V^\top C \|_{op}$ $\leq$ $\| B^\top\|_{op} \|U\|_{op}
+\|V^\top\|_{op} \|C \|_{op}$ Each of $B$, $U$, $V$, and $C$ are rectangular
+orthogonal matrices whose maximum singular values are bounded by 1. We can see
+this with the following argument: Let $A$ be a rectangular orthogonal matrix
+whose ``inner square" orthogonal matrix is written $\tilde{A}$ with
+decomposition $\tilde{A} = \tilde{U} \tilde{\Sigma} \tilde{V}^\top$. We add
+additional zeros to the diagonal of $\tilde{\Sigma}$ and orthogonal unit vector
+rows to $\tilde{U}$ and $\tilde{V}^{\top}$, to get matrices $U$, $\Sigma$, and
+$V^\top$, so that $U,\Sigma,V^\top$ $\in$ $\mathbb{R}^{n \times n}$ (note that
+$U$, $\Sigma$, and $V^{\top}$ indeed exist and their product equals $A$). The
+singular values of $A$ are therefore all less than 1.\\
+
+
+\textbf{(B) }
+
+\end{document}
