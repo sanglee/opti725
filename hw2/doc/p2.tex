@@ -23,11 +23,81 @@ whose ``inner square" orthogonal matrix is written $\tilde{A}$ with
 decomposition $\tilde{A} = \tilde{U} \tilde{\Sigma} \tilde{V}^\top$. We add
 additional zeros to the diagonal of $\tilde{\Sigma}$ and orthogonal unit vector
 rows to $\tilde{U}$ and $\tilde{V}^{\top}$, to get matrices $U$, $\Sigma$, and
-$V^\top$, so that $U,\Sigma,V^\top$ $\in$ $\mathbb{R}^{n \times n}$ (note that
-$U$, $\Sigma$, and $V^{\top}$ indeed exist and their product equals $A$). The
-singular values of $A$ are therefore all less than 1.\\
+$V^\top$, so that $U,\Sigma,V^\top$ $\in$ $\mathbb{R}^{n \times n}$ and $U
+\Sigma V^\top = A$ (note that $U$, $\Sigma$, and $V^{\top}$ indeed exist and
+their product equals $A$). The singular values of $\tilde{A}$ are all less then
+1, so therefore the singular values of $A$ are also all less than 1.\\
 
 
-\textbf{(B) }
+\textbf{(B) } Using the properties of matrix products under the trace, we have
+\begin{align}
+        &\tr \left( (U V^\top + W)^\top A \right) \\
+    =   &\tr \left( (U V^\top + W)^\top U \Sigma V^\top \right)\\
+    =   &\tr \left( (U V^\top + W) V \Sigma U^\top \right)\\
+    =   &\tr \left( (U + W V) \Sigma U^\top \right)\\
+    =   &\tr \left( \Sigma + \Sigma U^\top W V \right)\\
+    =   &\tr \left( \Sigma \right)
+\end{align}
+
+
+\textbf{(C) } Note that the dual of the trace norm is the operator norm, i.e.
+$\|A\|_* = \max_{\|B\|_{op} \leq 1} \tr(B^\top A)$, and hence
+\begin{align}
+    \partial \|A\|_* &= \text{cl} \left[ \text{conv}\left(
+        \bigcup_{\substack{\|B\|_{op} \leq 1 \\ \tr(B^\top A) = \|A\|_*}} \partial
+        \tr(B^\top A)  \right) \right] \\
+    &= \text{cl} \left[ \text{conv}\left( \bigcup_{\substack{\|B\|_{op} \leq 1
+        \\ \tr(B^\top A) = \|A\|_*}} B \right) \right] \\
+    &=  \text{cl} \left[ \text{conv} \{ B \hspace{1mm}:\hspace{1mm}
+        \|B\|_{op} \leq 1, \tr(B^\top A) = \|A\|_* \} \right]\\
+    &\supseteq \{ B \hspace{1mm}:\hspace{1mm} \|B\|_{op} \leq 1, \tr(B^\top A)
+        = \|A\|_* \}
+    %&= \{ U V^\top + W \hspace{1mm}:\hspace{1mm} \|W\|_{op} \leq 1, U^\top W =
+        %0, W V = 0 \}
+\end{align}
+Let $B = U V^\top + W$ such that $\|W\|_{op} \leq 1$, $U^\top W = 0$, $WV = 0$.
+We know then from parts (a) and (b) that this set of $B$ has the properties that
+$\|B\|_{op}$ $=$ $\|U V^\top + W\|_{op}$ $\leq 1$ and $\tr(B^\top A)$ $=$
+$\tr((U V^\top + W)^\top A)$ $=$ $\|A\|_*$, and therefore
+\begin{align}
+    \partial \|A\|_* &\supset \{ B \hspace{1mm}:\hspace{1mm} \|B\|_{op} \leq 1, \tr(B^\top A)
+        = \|A\|_* \}\\
+    &= \{ U V^\top + W \hspace{1mm}:\hspace{1mm} \|W\|_{op} \leq 1, U^\top W =
+        0, W V = 0 \}
+\end{align}
+
+
+\textbf{(D) } 
+We use a similar sequence of steps. Note that the dual of the operator norm is the trace norm, i.e.
+$\|A\|_{op} = \max_{\|B\|_* \leq 1} \tr(B^\top A)$, and hence
+\begin{align}
+    \partial \|A\|_{op} &\supseteq \text{conv}\left( \bigcup_{\substack{\|B\|_* \leq 1
+    \\ \tr(B^\top A) = \|A\|_{op}}} B \right)\\
+    &\supseteq \text{conv}\{B : \|B\|_* \leq 1, \tr(B^\top A) = \|A\|_{op} \}
+\end{align}
+We can let $B = u_j v_j^\top$, where $j = \|A\|_{op}$, and show this is
+equvalent to the above set. Note that $\|B\|_*$ $=$ $\|u_j v_j^\top\|_* \leq
+1$, and also that $\tr(B^\top A) = \tr((u_j v_j^\top)^\top A) = \|A\|_{op}$,
+because
+\begin{align}
+    \tr((u_j v_j^\top)^\top A) &= \tr(v_j u_j^\top A)\\
+                               &= \tr(u_j^\top A v_j) \\
+                               &= \tr\left(u_j^\top U \Sigma V^\top v_j \right)\\
+                               &= \Sigma_{jj} = \|A\|_{op}
+\end{align}
+and hence
+\begin{align}
+    \partial \|A\|_{op} &\supseteq \text{conv}\{B : \|B\|_* \leq 1, \tr(B^\top A) = \|A\|_{op} \}\\
+                        &= \text{conv}\{u_j v_j^\top : \Sigma_{jj} = \Sigma_{11} \}
+\end{align}
+
+
+\textbf{(E) }
+Assuming this fact, the subdifferential $\partial \|A\|_{op}$ contains a single
+element when there is only 1 maximum singular value for $A$ (since $A = U
+\Sigma V^\top$, if $\Sigma$ had multiple maximum elements $\sigma_1, \sigma_2,
+\ldots$ on its diagonal, then $\partial \|A\|_{op} = \{ u_{j_1} v_{j_1}^\top,
+u_{j_2} v_{j_2}^\top, \ldots \}$). This implies that the operator norm of matrix A
+if differentiable when $A$ has a unique maximum singular value.
 
 \end{document}
