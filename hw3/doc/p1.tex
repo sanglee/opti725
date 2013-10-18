@@ -20,20 +20,49 @@
 
 \textbf{(Q1)}
 (a) Set $z_i \leftarrow \text{max}(0,z_i)$. 
-(b) Set $z_i \leftarrow z_i/\|z\|_2$. 
+(b) Set $z_i \leftarrow z_i/\text{max}(1,\|z\|_2)$. 
 %(c) Set $z_i \leftarrow \begin{cases} z_i &\mbox{if }
 %\|z_i\| \leq 1 \\  z_i/\|z_i\| &\mbox{if } \|z_i\| > 1 \end{cases}$.
-(c) Set $z_i \leftarrow z_i/\text{max}(1,\|z_i\|)$.
+(c) Set $z_i \leftarrow z_i/\text{max}(1,|z_i|)$.
 \\
 
 \textbf{(Q2)}
-(a) .
-(b) .
-(c) .
+(a) Let $f(x) = \frac{1}{2}\|x-z\|_2^2 + \lambda h(x)$. Setting the gradient to
+zero, we see that $\nabla_{x_i} f(x) = x_i - z_i - \frac{\lambda}{x_i} = 0$
+$\implies$ $x_i^2 - x_i z_i - \lambda = 0$ (for each component). Hence, we can
+solve to get $x_i^* = \frac{z_i \pm \sqrt{z_i^2 + 4\lambda}}{2}$. Finally, note
+that $x_i^* = \frac{z_i - \sqrt{z_i^2 + 4\lambda}}{2}$ is not a valid solution
+since $x_i^*$ would be negative and $h(x^*)$ would involve logs of negative
+numbers.  Hence, $\text{prox}(z) = (p_1,..,p_n)$, where $p_i = \frac{z_i +
+\sqrt{z_i^2 + 4\lambda}}{2}$.
+
+(b) Let $f(x) = \frac{1}{2}\|x-z\|_2^2 + \lambda h(x)$. Setting the gradient to
+zero, we see that $\nabla_{x} f(x) = x - z + \lambda(A+A^\top)x + \lambda b =
+0$. Hence, we can solve to get $x^* = (z-\lambda b) (I + \lambda(A +
+A^\top))^{-1}$ (note that this matrix is invertible since it is psd). Hence,
+$\text{prox}(z) = (z-\lambda b) (I + \lambda(A + A^\top))^{-1}$.
 \\
 
-\textbf{(Q3)} First \\
-
-
+\textbf{(Q3)} 
+In general, a linear program in standard form is: maximize
+$\mathbf{c}^\top\mathbf{x}$ such that $A\mathbf{x} \leq \mathbf{b}$,
+$\mathbf{x}\geq 0$. And the dual form is: minimize $\mathbf{b}^\top\mathbf{y}$
+such that $A^\top\mathbf{y} \geq \mathbf{c}$, $\mathbf{y}\geq 0$. We use this 
+form to write the dual of the following problems.\\
+(a) The dual is:
+$\min_y 4 y_1 + 2 y_2$ s.t. $y_1 + y_2 \geq 2$, $-y_1-y_2 \geq 1$, $y_1 \geq 0$, $y_2 \geq 0$.
+The dual program is infeasible (no $y_1$, $y_2$ satisfy these constraints), and thus the 
+primal program is unbounded (from the weak duality theorem).
+\\
+(b) The dual is:
+$\min_y -4 y_1 + 2 y_2$ s.t. $-y_1 + y_2 \geq 2$, $-y_1+y_2 \geq 1$, $y_1 \geq 0$, $y_2 \geq 0$.
+The dual program is unbounded ($y_1$ and $y_2$ can both get very large), and thus the 
+primal program is infeasible (from the weak duality theorem).
+\\
+(c) The dual is:
+$\min_y -4 y_1 + 2 y_2$ s.t. $-y_1 + y_2 \geq 2$, $y_1-y_2 \geq 1$, $y_1 \geq 0$, $y_2 \geq 0$.
+The dual program is infeasible (no $y_1$, $y_2$ satisfy these constraints), and thus the 
+primal program is unbounded (from the weak duality theorem).
+\\
 
 \end{document}

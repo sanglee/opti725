@@ -29,7 +29,7 @@ frect{4} = [-3,3,-6,6];
 
 warning('off','MATLAB:ezplotfeval:NotVectorized');
 stopEps = 1e-6;
-inits = {[1,1],[2,2],[3,3]};
+inits = {[0,0],[2,2],[3,3]};
 
 % newton's method
 spcounter = 1;
@@ -57,6 +57,23 @@ for fun=1:length(f)
         hold on; plot(Xs(1,1),Xs(1,2),'ro','MarkerSize',3);
         hold on; plot(Xs(end,1),Xs(end,2),'r^');
         fprintf('BFGS. Init=%d. NumIter=%d.\n',in,size(Xs,1));
+        spcounter=spcounter+1;
+    end
+end
+
+% gradDesc
+figure,
+inits = {[0,0]};
+spcounter = 1;
+for fun=1:length(f)
+    for in=1:length(inits)
+        init = inits{in};
+        Xs = gradientDescent(f{fun},g{fun},init,stopEps);
+        subplot(length(f),length(inits),spcounter); ezcontour(f{fun},frect{fun});
+        hold on; plot(Xs(:,1),Xs(:,2),'.-');
+        hold on; plot(Xs(1,1),Xs(1,2),'o','MarkerSize',3);
+        hold on; plot(Xs(end,1),Xs(end,2),'*');
+        fprintf('Gradient descent. Init=%d. NumIter=%d.\n',in,size(Xs,1));
         spcounter=spcounter+1;
     end
 end

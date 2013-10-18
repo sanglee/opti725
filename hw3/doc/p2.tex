@@ -1,6 +1,125 @@
 \input{header}
 
-\section{Problem Two}
+\section*{Problem Two}
 
+\textbf{(Q1)}
+
+(a) Project a symmetric real matrix onto the positive semidefinite cone.\\
+For a symmetric real matrix $A$, we can write the eigendecomposition as
+$A = Q \Lambda Q^\top$, where $\Lambda$ is a diagonal matrix whose elements
+are the eigenvalues of $A$. We then let $S$ be a diagonal matrix (the same 
+size as $\Lambda$), with entries 
+\begin{align*}
+    S_{ii} = \begin{cases} \Lambda_{ii} \text{ if } \Lambda_{ii}\geq 0 \\ 0 \text{ o.w. } \end{cases}
+\end{align*}
+Then we set $A = Q S Q^\top$ to perform the projection.
+
+(b) Project a vector $y$ onto the space $\{z : z = Ax+b, x\in \mathbb{R}^n\}$
+for a given matrix $A \in \mathbb{R}^{m \times n}$ with full column rank.\\ Let
+$\text{proj}(z) = \argmin_{z:z=Ax+b} \|y-z\|_2^2$. We can rewrite this as
+$\text{proj}(z) = f(x) = \argmin_{x} \|y-Ax-b\|_2^2$. Taking the derivative of
+this and setting it to zero, we get $\nabla_x f(x) = -2A^\top(y-Ax-b)=0$.
+Solving, we get $x^* = (A^\top A)^{-1}(A^\top y - A^\top b)$. We can then write 
+$z^*  = A x^* + b =  A(A^\top A)^{-1}(A^\top y - A^\top b) + b$.
+
+
+\textbf{(Q2)}
+
+(a) Derive the prox function for $h(x) = \lambda\sum_i (x_i)_+$.  Let $f(x) =
+\frac{1}{2}\|x-z\|_2^2 + h(x)$ and note that the subdifferential $\partial f(x)
+= x - z + \partial h(x)$. We see that for $h(x_i) = (x_i)_+$,
+\begin{align*}
+    \partial h(x_i) = 
+        \begin{cases}
+            1 \text{ if } x_i>0\\
+            [0,1] \text{ if } x_i=0\\
+            0 \text{ if } x_i<0
+        \end{cases}
+\end{align*}
+Setting $\partial f(x)$ to 0 in each case and solving for $x$, we find that 
+\begin{align*}
+    x_i^* = 
+    \begin{cases}
+        z_i-\lambda \text{ if } x_i^* > 0\\
+        0 \text{ if } x_i^* = 0\\
+        z_i \text{ if } x_i^* < 0
+    \end{cases}
+\end{align*}
+And this allows us to write each element of the prox operator
+$\text{prox}(z) = (p_1,\ldots,p_n)$ as
+\begin{align*}
+    p_i = 
+    \begin{cases}
+        z_i-\lambda \text{ if } z_i > \lambda\\
+        0 \text{ if } z_i \in [0,\lambda]\\
+        z_i \text{ if } z_i < \lambda
+    \end{cases}
+\end{align*}
+
+(b) Derive the prox function for $h(x) = \lambda\|x\|_2$.  Let $f(x) =
+\frac{1}{2}\|x-z\|_2^2 + h(x)$ and note that the subdifferential $\partial f(x)
+= x - z + \partial h(x)$. We see that 
+\begin{align*}
+    \partial h(x) = 
+    \begin{cases}
+        \frac{x}{\|x\|_2} \text{ if } x \neq 0\\
+        \{w : \|w\|_2 \leq 1 \} \text{ if } x=0
+    \end{cases}
+\end{align*}
+Setting $\partial f(x)$ to 0 in each case and solving for $x$, we find that 
+\begin{align*}
+    x^* = 
+    \begin{cases}
+        \frac{z(\|z\|_2-\lambda)}{\|z\|_2} \text{ if } x \neq 0\\
+        0 \text{ if } x=0
+    \end{cases}
+\end{align*}
+And this allows us to write the prox operator as
+\begin{align*}
+    \text{prox}(z) = 
+    \begin{cases}
+        0 \text{ if } \|z\|_2 < \lambda \\
+        \frac{z(\|z\|_2-\lambda)}{\|z\|_2} \text{ o.w. }\\
+    \end{cases}
+\end{align*}
+
+(c) Derive the prox function for $h(x) = \lambda\|x\|_\infty$.  Let $f(x) =
+\frac{1}{2}\|x-z\|_2^2 + h(x)$ and note that the subdifferential $\partial f(x)
+= x - z + \partial h(x)$. We see that 
+\begin{align*}
+    \partial h(x) = 
+    \begin{cases}
+        \{w : \|z\|_1 \leq \lambda \} \text{ if }  x=0\\
+        \hat{z}_i = 
+        \begin{cases}
+            0 \text{ if }  i\neq \argmax_i \|x_i\| \\
+            \lambda\text{conv}(\text{sgn}(x_i)) \text{ o.w. }
+        \end{cases}
+    \end{cases}
+\end{align*}
+Setting $\partial f(x)$ to 0 in each case and solving for $x$, we find that 
+\begin{align*}
+    x^* = 
+    \begin{cases}
+        0 \text{ if }  x=0\\
+        \hat{z}_i = 
+        \begin{cases}
+            z_i \text{ if }  i\neq \argmax_i \|x_i\| \\
+            z_i - \lambda(\text{sgn}(x_i)) \text{ o.w. }
+        \end{cases}
+    \end{cases}
+\end{align*}
+And this allows us to write the prox operator as
+\begin{align*}
+    \text{prox}(z) = 
+    \begin{cases}
+        0 \text{ if }  \|z\|_1 < \lambda\\
+        \hat{z}_i = 
+        \begin{cases}
+            z_i \text{ if }  i\neq \argmax_i \|z_i\| \\
+            z_i - \lambda(\text{sgn}(z_i - \lambda)) \text{ o.w. }
+        \end{cases}
+    \end{cases}
+\end{align*}
 
 \end{document}

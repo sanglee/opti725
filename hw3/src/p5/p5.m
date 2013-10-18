@@ -20,6 +20,6 @@ title('NNMF on Training Data'); xlabel('iteration'); ylabel('objective value');
 [objVals_test,H_test] = test_faces(W,V_test);
 fprintf('The test mean mean-squared-error = %g\n', objVals_test(end)/size(V_test,2));
 
-%figure, imagesc(compact_canvas(V_test(:,1:49)));
-%V_recon = W*H_test;
-%figure, imagesc(compact_canvas(V_recon(:,1:49)));
+figure, imshow(compact_canvas(V_test(:,1:49)));
+V_recon = W*H_test;
+figure, imshow(compact_canvas(V_recon(:,1:49)));
