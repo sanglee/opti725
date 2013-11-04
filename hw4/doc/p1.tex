@@ -1,0 +1,82 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb,amsmath}
+\usepackage[parfill]{parskip}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\usepackage{graphicx}
+\usepackage[top=1in, bottom=1.25in, left=1.4in, right=1.4in]{geometry}
+
+
+\title{Optimization 10/36-725, 
+        Homework 4, Problem 1}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+\vspace{-6mm}
+
+\textbf{(A)} Proof that the dual norm of the dual norm is the original norm. We
+begin with definitions of the dual norm:
+\begin{align*}
+    \|x\|_{**} &= \max_{z : \|z\|_* \leq 1} z^\top x \\
+               &= \max_{z : \max_{v : \|v\| \leq 1} v^\top z \leq 1} z^\top x \\
+               &= \max_{\substack{ z : v^\top z \leq 1 \\ \forall \|v\| \leq 1}} z^\top x
+\end{align*}
+If we can show that both $ \|x\|_{**} \geq \|x\|$ and $\|x\|_{**} \leq \|x\|$,
+$\implies  \|x\|_{**} = \|x\|$. Since $\forall \|v\| \leq 1$, $v^\top z \leq 1$
+$\implies$ for any $x = sy$, s.t. $\|y\| = 1$ (note that $y = x/\|x\|$ and $s =
+\|x\|$), we have that $z^\top x  = s z^\top y \leq |s| \times 1 = |s| = \|x\|$
+and so $\|x\|_{**} \leq \|x\|$. Similarly, we can show that $ \|x\|_{**} \geq \|x\|$ 
+and so $\|x\|_{**} = \|x\|$.
+
+\textbf{(B)}
+Note that we can rewrite the original problem as: $\min_x
+\frac{1}{2}\|y-z\|_2^2 + \lambda \|x\|$ s.t. $z=x$. We can write the Lagrangian as
+$L(x,z,u) = \frac{1}{2}\|y-z\|_2^2 + u^\top z + \lambda \|x\| - u^\top x$, 
+and the Lagrange dual function as 
+$g(u) = \min_{x,z} L(u,x,z) = \min_z \left( \frac{1}{2}\|y-z\|_2^2 + u^\top z \right) 
++ \min_x \left( \lambda \|x\| - u^\top x \right)$. Solving for the optimal
+$z$ by taking the derivative of the first component 
+and setting to zero gives $(y-z)(-1) + u = 0  \implies z^* = y-u$. 
+For the second component, $\min_x \left( \lambda \|x\| - u^\top x \right)$
+$=$ $-\left( \max_x u^\top x - \lambda \|x\|_2 \right)$ $=$ 
+$-f^*(u)$ (where $f(x) = \lambda \|x\|_1$) = $-I \{v: \|v\|_\infty \leq \lambda\|(u) \}$.
+Plugging this value for $z$ and the second component back in as an implicit
+constraint, we find that the dual problem is 
+\begin{align*}
+    \max_u \left( u^\top y - \frac{1}{2}\|u\|_2^2 \right) \hspace{3mm} \text{ s.t. }
+    \|u\|_\infty \leq \lambda
+\end{align*}
+To get an explicit solution, we take the derivative and set to zero to get: $u-y=0 \implies u*=y$, such that
+$\|u^*\|_\infty \leq \lambda$ (hence, if $\|u^*\|_\infty \geq \lambda$ we project $u^*$
+onto the $l-\infty$ ball with radius $\lambda$).
+Using the KKT conditions, (based on the equality constraints we have) we find that 
+stationarity and primal feasibility conditions apply here. For the former,
+$0 \in \partial L(x,z,u) \implies 0 = z - y + u $ $\implies$ $z = y-u$.
+And for the latter we have $z-x=0 \implies z=x$.
+\\
+
+\textbf{(C)}
+We can rewrite the initial problem as
+\begin{align*}
+    \min_{x_1,x_2 \geq 0} -x_1 - x_2 \hspace{3mm} \text{ s.t. } x_1 + \frac{x_2}{2} -1 \leq 0, 
+    \frac{x_1}{3} + x_2 - 1 \leq 0
+\end{align*}
+And can write the dual linear program as 
+\begin{align*}
+    &\max_{v_1,v_2 \geq 0} \min_{x_1,x_2 \geq 0} -x_1 - x_2 + v_1(x_1 + \frac{x_2}{2} - 1) + 
+    v_2(\frac{x_1}{3} + x_2 - 1)  \\
+    &= \max_{v_1,v_2 \geq 0} \min_{x_1,x_2 \geq 0} -v_1 - v_2 + x_1(v_1 + \frac{v_2}{3} - 1) + 
+        x_2(\frac{v_1}{2} + v_2 - 1)\\
+    &= \min_{v_1,v_2 \geq 0} v_1 + v_2 \hspace{3mm} \text{ s.t. } v_1 + \frac{v_2}{3} \geq 1,
+        \frac{v_1}{2} + v_2 \geq 1
+\end{align*}
+Note that the primal problem is convex, and the conditions on $x_1$ and $x_2$ do not specify the null set
+(e.g. take $x_1 = x_2 = 0.1$), and so Slater's condition is satisfied. Hence, strong duality holds, and the
+duality gap is zero. Hence, the KKT conditions all hold and $\{x_1,x_2,v_1,v_2\}$ are the primal and
+dual solutions.
+
+\end{document}

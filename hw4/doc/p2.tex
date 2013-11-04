@@ -1,0 +1,107 @@
+\input{header}
+
+\section*{Problem Two}
+
+\textbf{(2.a)}\\
+We can write the original problem as
+\begin{align*}
+    \min_{\beta \in \mathbb{R}^p} f(z) + \lambda \| \beta \|_1  
+    \hspace{3mm} \text{s.t.} \hspace{3mm}
+    z = X\beta.
+\end{align*}
+We can write the Lagrangian as 
+\begin{align*}
+    L(\beta,z) = f(z) + \lambda \| \beta \|_1 + u^\top (z - X\beta)
+\end{align*}
+and can write the Lagrange dual function as 
+\begin{align*}
+    g(u) = \min_{\beta,z} L(\beta,z) = \min_z \left( f(z) + u^\top z \right)
+    +  \min_\beta \left( \lambda \| \beta \|_1 - u^\top X \beta \right).
+\end{align*}
+Note that $\min_z \left( f(z) + u^\top z \right)  =  - \max_z \left( u^\top z - (-f(z)) \right)
+=  -f^*(u)$ and that $\min_\beta \left( \lambda \| \beta \|_1  - u^\top X \beta \right)
+= - \max_\beta \left( u^\top X \beta - \lambda \| \beta \|_1 \right) = 
+-I\{X^\top u : \|X^\top u \|_\infty \leq \lambda \}$, and so the dual is
+\begin{align*}
+    \max_{u \in \mathbb{R}^n} -f^*(-u) \hspace{3mm}\text{s.t.}\hspace{3mm} \|X^t u\|_\infty \leq \lambda.
+\end{align*}
+As for the stationarity KKT condition for $\beta$ (3), note that the subdifferential 
+\begin{align*}
+0 \in \partial L(\beta,z) 
+&\implies 0 \in -X^\top u + \lambda
+\begin{cases}
+    \text{sign}(\beta_i) \hspace{2mm} \text{ if } \beta_i \neq 0 \\
+    [-1,1] \hspace{2mm} \text{ if } \beta_i = 0
+\end{cases} \\
+&\implies X^\top u \in \lambda
+\begin{cases}
+    \text{sign}(\beta_i) \hspace{2mm} \text{ if } \beta_i \neq 0 \\
+    [-1,1] \hspace{2mm} \text{ if } \beta_i = 0
+\end{cases}
+\end{align*}
+
+
+\textbf{(2.b)}\\
+Consider the problem
+\begin{align*}
+    \min_{u \in \mathbb{R}^n} -X_k^\top u \hspace{3mm}\text{ s.t. } \gamma + f^*(-u) \leq 0
+\end{align*}
+The Lagrangian of this is
+\begin{align*}
+    L(u,\mu) = -X_k^\top u + \mu\gamma + \mu f^*(-u),
+\end{align*}
+and the Lagrangian dual function is
+\begin{align*}
+    g(\mu) = \min_{u \in \mathbb{R}^n} L(u,\mu) = \mu\gamma - 
+    \mu \max_{u \in \mathbb{R}^n} \left( \frac{X_k^\top}{\mu}u - f^*(-u) \right)
+    = \mu \gamma - \mu f\left(-\frac{X_k}{\mu}\right).
+\end{align*}
+So the dual is 
+\begin{align*}
+    T_{k,+} = 
+    - \max_{\mu > 0} \mu \gamma - \mu f\left(-\frac{X_k}{\mu}\right)
+    = \min_{\mu > 0} - \mu \gamma + \mu f\left(-\frac{X_k}{\mu}\right) 
+\end{align*}
+
+
+\textbf{(2.c)}\\
+Substituting, we get that 
+\begin{align*}
+    T_{k,+} = \min_{\mu > 0} - \mu \gamma + \mu \frac{1}{2} \| Y + \frac{X_k}{\mu} \|_2^2.
+\end{align*}
+Setting the gradient w.r.t $\mu$ to zero, we have that
+\begin{align*}
+    0 &= -\gamma + \frac{1}{2}\left(Y^\top Y + 2\frac{X_k}{\mu}Y + \frac{X_k^\top X_k}{\mu^2} \right)
+    - \frac{X_k}{\mu}\left(Y + \frac{X_k}{\mu}\right) \\
+    &= -2\gamma + Y^\top Y - \frac{1}{\mu^2}
+\end{align*}
+$\implies \mu^* = \frac{1}{Y^\top Y - 2\gamma}$. Plugging this back in, we get that 
+\begin{align*}
+    T_{k,+} = 
+    \frac{ \| Y + X_k * (Y^\top Y - 2\gamma) \|_2^2 - \gamma}{2(Y^\top Y - 2\gamma)}
+    = \sqrt{Y^\top Y - 2\gamma} + Y^\top X_k
+\end{align*}
+
+
+\textbf{(2.d)}\\
+Using similar steps as part (c), we see that 
+\begin{align*}
+    T_{k,-} = \sqrt{Y^\top Y - 2\gamma} - Y^\top X_k
+\end{align*}
+Hence, $Y^\top X_k > 0$ iff $T_k = T_{k,+} = \sqrt{Y^\top Y - 2\gamma} +
+Y^\top X_k = \sqrt{Y^\top Y - 2\gamma} + |Y^\top X_k|$, 
+and similarly
+$Y^\top X_k < 0$ iff $T_k = T_{k,-} = \sqrt{Y^\top Y - 2\gamma} - Y^\top X_k
+= \sqrt{Y^\top Y - 2\gamma} + |Y^\top X_k|$.
+Hence, $\lambda > T_k \iff \lambda > \sqrt{Y^\top Y - 2\gamma} + |Y^\top X_k|$.
+
+
+\textbf{(2.e)}\\
+For a constant $s$,  let $u=sY$, and we have the constraint $\|X^\top u\|_\infty \leq \lambda$. 
+Note that we can always make $s$ small enough, such that $\|X^\top s Y\|_\infty \leq \lambda$
+(namely, let $s = \frac{\lambda}{\max_i (X^\top Y)_i}$). 
+We can then choose a corresponding explicit form for $\gamma$ by picking some
+$\gamma \leq -f^*(-sY)$ (for whichever $f$ function we have picked).
+
+
+\end{document}
